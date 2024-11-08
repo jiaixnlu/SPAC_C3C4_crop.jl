@@ -64,22 +64,30 @@ function sw_balance(IWS::T, pEc::T, pEs::T, Ta::T, Topt::T, s_VOD::T,
   soilpar, pftpar, wet, zm, state::State) where {T<:Real}
   (; wa, zgw) = state
   # s_tem = Temp_stress(Topt, Ta) # Constrains of temperature
+  # s_tem = exp(-((Ta - Topt) / Topt)^2) * 0 +1
   s_tem = exp(-((Ta - Topt) / Topt)^2)
+  case_num = 0
 
   if zgw <= 0
     fun = swb_case0 # Case 0: groundwater overflow
+    case_num = 0  # 方案 0: 地下水溢出
   elseif 0 < zgw <= zm[1]
     fun = swb_case1 # Case 1: groundwater table in layer 1
+    case_num = 1  # 方案 1: 地下水位在第一层
   elseif zm[1] < zgw <= zm[1] + zm[2]
     fun = swb_case2 # Case 2: groundwater table in layer 2
+    case_num = 2  # 方案 2: 地下水位在第二层
   elseif zm[1] + zm[2] < zgw < zm[1] + zm[2] + zm[3]
     fun = swb_case3 # Case 3: groundwater table in layer 3
+    case_num = 3  # 方案 3: 地下水位在第三层
   else
     fun = swb_case4 # Case 4: groundwater table below layer 3
+    case_num = 4  # 方案 4: 地下水位低于第三层
   end
 
-  state.wa, state.zgw, Tr, Es, uex = fun(wa, IWS, pEc, pEs, s_tem, s_VOD, soilpar, pftpar, wet, zm, zgw)
-  return Tr, Es, uex
+  state.wa, state.zgw, Tr, Es, uex, Tr1, Tr2, Tr3, f_sm1, f_sm2, f_sm3, s_vod, s_tem, Tr_p1, Tr_p2, Tr_p3, f_sm_s1, f_sm_s2, f_sm_s3 = fun(wa, IWS, pEc, pEs, s_tem, s_VOD, soilpar, pftpar, wet, zm, zgw)
+
+  return Tr, Es, uex, Tr1, Tr2, Tr3, case_num, f_sm1, f_sm2, f_sm3, s_vod, s_tem, Tr_p1, Tr_p2, Tr_p3, f_sm_s1, f_sm_s2, f_sm_s3
 end
 
 # # Temperature Constrains for plant growing

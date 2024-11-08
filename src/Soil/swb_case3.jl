@@ -64,9 +64,20 @@ function swb_case3(wa, IWS, pEc, pEs, s_tem, s_vod, soilpar, pftpar, fwet, zm, z
   Tr_p3_u = Tr_p3 * (d3 * wa3_unsat) / (d3 * wa3_unsat + (zm[3] - d3) * θ_sat)
   Tr_p3_g = Tr_p3 * ((zm[3] - d3) * θ_sat) / (d3 * wa3_unsat + (zm[3] - d3) * θ_sat)
 
+  # f_sm1, f_sm_s1 = swc_stress(wa1, pEc, soilpar, pftpar)
+  # f_sm2, _ = swc_stress(wa2, pEc, soilpar, pftpar)
+  # f_sm3, _ = swc_stress(wa3_unsat, pEc, soilpar, pftpar)
+
   f_sm1, f_sm_s1 = swc_stress(wa1, pEc, soilpar, pftpar)
-  f_sm2, _ = swc_stress(wa2, pEc, soilpar, pftpar)
-  f_sm3, _ = swc_stress(wa3_unsat, pEc, soilpar, pftpar)
+  f_sm2, f_sm_s2 = swc_stress(wa2, pEc, soilpar, pftpar)
+  f_sm3, f_sm_s3 = swc_stress(wa3_unsat, pEc, soilpar, pftpar)
+
+  # f_sm1 = 1
+  # f_sm_s1 = 1
+  # f_sm2 = 1
+  # f_sm_s2 = 1
+  # f_sm3 = 1
+  # f_sm_s3 = 1
 
   Tr1 = f_sm1 * s_vod * s_tem * Tr_p1
   Tr2 = f_sm2 * s_vod * s_tem * Tr_p2
@@ -147,5 +158,5 @@ function swb_case3(wa, IWS, pEc, pEs, s_tem, s_vod, soilpar, pftpar, fwet, zm, z
 
   wa = [wa1, wa2, wa3]
   zgw = max(0, zgw)
-  return wa, zgw, Tr, Es, uex
+  return wa, zgw, Tr, Es, uex, Tr1, Tr2, Tr3, f_sm1, f_sm2, f_sm3, s_vod, s_tem, Tr_p1, Tr_p2, Tr_p3, f_sm_s1, f_sm_s2, f_sm_s3
 end

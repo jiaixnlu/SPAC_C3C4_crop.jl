@@ -70,5 +70,11 @@ function swb_case0(wa, IWS, pEc, pEs, s_tem, s_vod, soilpar, pftpar, fwet, zm, z
   wa = [wa1, wa2, wa3]
   zgw = max(0, zgw)  # ensure groundwater table depth is non-negative
 
-  return wa, zgw, Tr, Es, uex
+  f_sm1 = 1
+  f_sm2 = 1
+  f_sm3 = 1
+  f_sm_s1 = 1
+  f_sm_s2 = 1 
+  f_sm_s3 = 1
+  return wa, zgw, Tr, Es, uex, Tr1, Tr2, Tr3, f_sm1, f_sm2, f_sm3, s_vod, s_tem, Tr_p1, Tr_p2, Tr_p3, f_sm_s1, f_sm_s2, f_sm_s3
 end

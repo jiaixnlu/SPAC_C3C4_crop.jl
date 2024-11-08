@@ -33,11 +33,12 @@ function swc_stress(wa::T, pET::T, soilpar, pftpar) where {T<:Real}
   k = 4 * ((k - 0.7) / 4.3) + 1 # scale [1, 25] to [1, 5], `CH_scalar`
 
   b = 0.1
-  p = 1 / (1 + pET) - b / (1 + Hc) # Zhang 2022, Eq. 9
-  θ_wpCH = θ_wp / k
+  p = 1 / (1 + pET) - b / (1 + Hc) # Zhang 2022, Eq. 9 root depth (m) pET(mm)
+  θ_wpCH = θ_wp / k 
 
   # critical soil moisture for different PFTs
   θ_c = (1 - p) * (θ_fc - θ_wpCH) + θ_wpCH
+  # θ_c = (1 - 0) * (θ_fc - θ_wpCH) + θ_wpCH
   θ_c = clamp(θ_c, θ_wpCH, θ_fc)
 
   if wa <= θ_wpCH

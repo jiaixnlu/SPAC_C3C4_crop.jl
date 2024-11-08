@@ -55,8 +55,16 @@ function swb_case2(wa, IWS, pEc, pEs, s_tem, s_vod, soilpar, pftpar, fwet, zm, z
   Tr_p2_g = Tr_p2 * ((zm[2] - d2) * θ_sat) / (d2 * wa2_unsat + (zm[2] - d2) * θ_sat)
 
   # Moisture constraints
+  # f_sm1, f_sm_s1 = swc_stress(wa1, pEc, soilpar, pftpar)
+  # f_sm2, _ = swc_stress(wa2_unsat, pEc, soilpar, pftpar)
+
   f_sm1, f_sm_s1 = swc_stress(wa1, pEc, soilpar, pftpar)
-  f_sm2, _ = swc_stress(wa2_unsat, pEc, soilpar, pftpar)
+  f_sm2, f_sm_s2 = swc_stress(wa2_unsat, pEc, soilpar, pftpar)
+
+  # f_sm1 = 1
+  # f_sm_s1 = 1
+  # f_sm2 = 1
+  # f_sm_s2 = 1
 
   # Actual transpiration
   Tr1 = f_sm1 * s_vod * s_tem * Tr_p1
@@ -64,7 +72,7 @@ function swb_case2(wa, IWS, pEc, pEs, s_tem, s_vod, soilpar, pftpar, fwet, zm, z
   Tr2_g = s_vod * s_tem * Tr_p2_g
   Tr2 = Tr2_u + Tr2_g
   Tr3 = s_vod * s_tem * Tr_p3
-  Tr = Tr1 + Tr2 + Tr3
+  @show Tr = Tr1 + Tr2 + Tr3
 
   # Actual soil evaporation
   Es = f_sm_s1 * pEs
@@ -128,5 +136,8 @@ function swb_case2(wa, IWS, pEc, pEs, s_tem, s_vod, soilpar, pftpar, fwet, zm, z
   wa = [wa1, wa2, wa3]
   zgw = max(0, zgw)
 
-  return wa, zgw, Tr, Es, uex
+  f_sm3 = 1
+  f_sm_s3 = 1
+  
+  return wa, zgw, Tr, Es, uex, Tr1, Tr2, Tr3, f_sm1, f_sm2, f_sm3, s_vod, s_tem, Tr_p1, Tr_p2, Tr_p3, f_sm_s1, f_sm_s2, f_sm_s3
 end
